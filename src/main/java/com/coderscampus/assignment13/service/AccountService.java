@@ -21,15 +21,12 @@ public class AccountService {
 
 	public Account accountCreateOrUpdate(User user) {
 		
-		Account createdAccount = new Account();
+		Account createdAccount = new Account();	
+		createdAccount.setAccountName("Account #" + (user.getAccounts().size() + 1));	
 		
-		createdAccount.setAccountName("Account #" + (user.getAccounts().size() + 1));
-
 		createdAccount.getUsers().add(user);
 		user.getAccounts().add(createdAccount);
 		
-		
-
 		return accountRepository.save(createdAccount);
 
 	}

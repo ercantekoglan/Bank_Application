@@ -2,8 +2,8 @@ package com.coderscampus.assignment13.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,7 +35,7 @@ public class Account {
 	public void setAccountName(String accountName) {
 		this.accountName = accountName;
 	}
-    @OneToMany(mappedBy = "account", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "account")
 	public List<Transaction> getTransactions() {
 		return transactions;
 	}
@@ -49,5 +49,21 @@ public class Account {
 	public void setUsers(List<User> users) {
 		this.users = users;
 	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(accountId);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Account other = (Account) obj;
+		return Objects.equals(accountId, other.accountId);
+	}
+	
 	
 }
