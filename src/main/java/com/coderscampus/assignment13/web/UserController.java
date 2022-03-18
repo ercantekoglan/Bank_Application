@@ -80,27 +80,30 @@ public class UserController {
 		return "redirect:/users";
 	}
 
+	//Getmapping for showing the user information
 	@GetMapping("/users/{userId}/accounts/{accountId}")
 	public String getAccount(ModelMap modelMap, @PathVariable Long userId, @PathVariable Long accountId) {
 		modelMap.put("user", userService.findById(userId));
 		modelMap.put("account", accountService.findAccountById(accountId));
 		return "accounts";
 	}
-
+	
+	//Postmapping for creating the user bank account
 	@PostMapping("/users/{userId}/accounts")
 	public String createAccount(@PathVariable Long userId) {
 		User user = userService.findById(userId);
 		Account account = accountService.accountCreateOrUpdate(user);
 		return "redirect:/users/" + user.getUserId() + "/accounts/" + account.getAccountId();
 	}
-
+	
+	//Postmapping for saving the user bank account
 	@PostMapping("/users/{userId}/accounts/{accountId}")
 	public String saveAccount(@PathVariable Long userId, @PathVariable Long accountId, Account account) {
-		User savedUser = userService.findById(userId);
+		
 		Account savedAccount = accountService.findAccountById(accountId);
 		savedAccount.setAccountName(account.getAccountName());
 		accountService.saveAccount(savedAccount);
-		return "redirect:/users/" + savedUser.getUserId() + "/accounts/" + savedAccount.getAccountId();
+		return "redirect:/users/" + userId + "/accounts/" + savedAccount.getAccountId();
 	}
 
 }
