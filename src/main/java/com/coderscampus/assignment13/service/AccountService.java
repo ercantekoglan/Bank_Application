@@ -19,25 +19,26 @@ public class AccountService {
 		return findById.orElseThrow();
 	}
 
-	public Account accountCreateOrUpdate(User user) {
-		
-		Account createdAccount = new Account();	
-		createdAccount.setAccountName("Account #" + (user.getAccounts().size() + 1));	
-		
+	public Account createAccount(User user) {
+
+		Account createdAccount = new Account();
+		createdAccount.setAccountName("Account #" + (user.getAccounts().size() + 1));
 		createdAccount.getUsers().add(user);
 		user.getAccounts().add(createdAccount);
-		
-		return accountRepository.save(createdAccount);
 
-	}
-	
-	public User findByIdWithAccounts(Long id) {
-		return accountRepository.findByIdWithAccounts(id);
+		return accountRepository.save(createdAccount);
 	}
 
 	public Account saveAccount(Account account) {
+		Account savedAccount = findAccountById(account.getAccountId());
+		savedAccount.setAccountName(account.getAccountName());
+		return accountRepository.save(savedAccount);
+	}
 
-		return accountRepository.save(account);
+	public User matchAccount(User user) {
+		User matchUserAccount = accountRepository.findByIdWithAccounts(user.getUserId());
+		user.setAccounts(matchUserAccount.getAccounts());
+		return user;
 	}
 
 }

@@ -38,6 +38,8 @@ public class UserController {
 	public String postCreateUser(User user) {
 		System.out.println(user);
 		userService.saveUser(user);
+	
+
 		return "redirect:/register";
 	}
 
@@ -65,10 +67,8 @@ public class UserController {
 
 	@PostMapping("/users/{userId}")
 	public String postOneUser(@PathVariable Long userId, User user, Account account) {
-		User findByIdWithAccounts = accountService.findByIdWithAccounts(userId);
-		user.setAccounts(findByIdWithAccounts.getAccounts());
-
-		addressService.addressCreateOrUpdate(user);
+		accountService.matchAccount(user);
+		addressService.updateAddress(user);
 		userService.saveUser(user);
 
 		return "redirect:/users/" + user.getUserId();
@@ -80,10 +80,10 @@ public class UserController {
 		return "redirect:/users";
 	}
 
-	//Getmapping for showing the user information
+	//Getmapping for showing the user account information
 	@GetMapping("/users/{userId}/accounts/{accountId}")
 	public String getAccount(ModelMap modelMap, @PathVariable Long userId, @PathVariable Long accountId) {
-		modelMap.put("user", userService.findById(userId));
+		modelMap.put("user", userService.findByIdWithAccounts(userId));
 		modelMap.put("account", accountService.findAccountById(accountId));
 		return "accounts";
 	}
@@ -92,18 +92,17 @@ public class UserController {
 	@PostMapping("/users/{userId}/accounts")
 	public String createAccount(@PathVariable Long userId) {
 		User user = userService.findById(userId);
-		Account account = accountService.accountCreateOrUpdate(user);
+		Account account = accountService.createAccount(user);
 		return "redirect:/users/" + user.getUserId() + "/accounts/" + account.getAccountId();
 	}
 	
 	//Postmapping for saving the user bank account
 	@PostMapping("/users/{userId}/accounts/{accountId}")
 	public String saveAccount(@PathVariable Long userId, @PathVariable Long accountId, Account account) {
-		
-		Account savedAccount = accountService.findAccountById(accountId);
-		savedAccount.setAccountName(account.getAccountName());
-		accountService.saveAccount(savedAccount);
-		return "redirect:/users/" + userId + "/accounts/" + savedAccount.getAccountId();
+		accountService.saveAccount(account);
+		return "redirect:/users/" + userId + "/accounts/" + accountId;
 	}
+
+
 
 }
