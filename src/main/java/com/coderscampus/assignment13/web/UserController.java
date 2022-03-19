@@ -65,7 +65,7 @@ public class UserController {
 	}
 
 	@PostMapping("/users/{userId}")
-	public String postOneUser(@PathVariable Long userId, User user, Account account) {
+	public String postOneUser(@PathVariable Long userId, User user) {
 		accountService.matchAccount(user);
 		addressService.updateAddress(user);
 		userService.saveUser(user);
