@@ -38,7 +38,6 @@ public class UserController {
 	public String postCreateUser(User user) {
 		System.out.println(user);
 		userService.saveUser(user);
-	
 
 		return "redirect:/register";
 	}
@@ -79,30 +78,5 @@ public class UserController {
 		userService.delete(userId);
 		return "redirect:/users";
 	}
-
-	//Getmapping for showing the user account information
-	@GetMapping("/users/{userId}/accounts/{accountId}")
-	public String getAccount(ModelMap modelMap, @PathVariable Long userId, @PathVariable Long accountId) {
-		modelMap.put("user", userService.findByIdWithAccounts(userId));
-		modelMap.put("account", accountService.findAccountById(accountId));
-		return "accounts";
-	}
-	
-	//Postmapping for creating the user bank account
-	@PostMapping("/users/{userId}/accounts")
-	public String createAccount(@PathVariable Long userId) {
-		User user = userService.findById(userId);
-		Account account = accountService.createAccount(user);
-		return "redirect:/users/" + user.getUserId() + "/accounts/" + account.getAccountId();
-	}
-	
-	//Postmapping for saving the user bank account
-	@PostMapping("/users/{userId}/accounts/{accountId}")
-	public String saveAccount(@PathVariable Long userId, @PathVariable Long accountId, Account account) {
-		accountService.saveAccount(account);
-		return "redirect:/users/" + userId + "/accounts/" + accountId;
-	}
-
-
 
 }
